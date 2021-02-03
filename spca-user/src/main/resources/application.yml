@@ -1,0 +1,65 @@
+
+server:
+  port: 8100
+#  servlet:
+#    context-path: /user-center
+
+spring:
+  application:
+    name: spca-user
+  datasource:
+    url: jdbc:mysql://192.168.1.124:3306/spca_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    hikari:
+      username: root
+      password: LHLlhl@870104
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  # 注册中心配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.200:8848
+        namespace: d7524619-c92f-4bd4-95e7-b0640804334e
+        cluster-name: NanJing
+        metadata:
+          service-version: 2020.1004
+          api-info: The lastest Api.
+    stream:
+      rocketmq:
+        binder:
+          name-server: 192.168.1.126:9876
+      bindings:
+        input:
+          destination: spca-content-tx
+          group: user-consumer-group
+  zipkin:
+    base-url: http://192.168.1.124:9411/
+    # 禁止Zipkin作为服务发现客户端，注意原配置不起效 discovery-client-enabled: false
+    discoveryClientEnabled: false
+  sleuth:
+    sampler:
+      # 抽样率，默认0.1（10%）
+      probability: 1.0
+
+# 配置RocketMQ-消费者端
+#rocketmq:
+#  name-server: 192.168.1.126:9876
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# 打印日志
+logging:
+  level:
+#    com.wzliulan.demo.spca: debug
+    com.alibaba.nacos: error
+
+# jwt
+jwt:
+  secret: I1Ni2VyX25hbWUiOiJhZIsImlkIjoiMSIsImlhdCI
+  expire: 1209600

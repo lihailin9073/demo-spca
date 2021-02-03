@@ -1,0 +1,19 @@
+
+server:
+  port: 8103
+#  servlet:
+#    context-path: /spca-spring-boot-admin
+
+spring:
+  application:
+    name: spca-spring-boot-admin
+  # ◊¢≤·÷––ƒ≈‰÷√
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.200:8848
+        namespace: d7524619-c92f-4bd4-95e7-b0640804334e
+        cluster-name: NanJing
+        metadata:
+          service-version: 2020.1004
+          api-info: The Spring-Boot-Admin Api.

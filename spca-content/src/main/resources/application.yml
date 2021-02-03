@@ -1,0 +1,127 @@
+server:
+  port: 8101
+#  servlet:
+#    context-path: /content-center
+
+spring:
+  application:
+    name: spca-content
+  datasource:
+    url: jdbc:mysql://192.168.1.124:3306/spca_content?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    hikari:
+      username: root
+      password: LHLlhl@870104
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  # 注册中心配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.200:8848
+        namespace: d7524619-c92f-4bd4-95e7-b0640804334e
+        cluster-name: NanJing
+        metadata:
+          service-version: 2020.1004
+          api-info: The lastest Api.
+    sentinel:
+      # filter:
+      # enabled: false
+      transport:
+        dashboard: localhost:8080
+    stream:
+      rocketmq:
+        binder:
+          name-server: 192.168.1.126:9876
+        bindings:
+          output:
+            producer:
+              transactional: true
+              group: add-bonus-tx-group
+      bindings:
+        output:
+          destination: spca-content-tx
+  zipkin:
+    base-url: http://192.168.1.124:9411/
+    # 禁止Zipkin作为服务发现客户端，注意原配置不起效 discovery-client-enabled: false
+    discoveryClientEnabled: false
+  sleuth:
+    sampler:
+      # 抽样率，默认0.1（10%）
+      probability: 1.0
+
+    # 配置用户中心微服务的Ribbon负载均衡规则
+#spca-user:
+#  ribbon:
+    # 使用Ribbon提供的负载均衡规则
+    # NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    # 使用基于Nacos权重加持的Ribbon负载均衡规则
+    # NFLoadBalancerRuleClassName: com.wzliulan.demo.spca.content.config.NacosWeightRule
+    # 使用基于Nacos同集群优先调用加持的Ribbon负载均衡规则
+    # NFLoadBalancerRuleClassName: com.wzliulan.demo.spca.content.config.NacosSameClusterRule
+
+
+# 配置Ribbon使用饥饿加载，解决首次访问过慢问题
+#ribbon:
+#  eager-load:
+#    enabled: true
+#    clients: spca-user
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# 打印日志
+logging:
+  level:
+    com.wzliulan.demo.spca: debug
+    com.alibaba.nacos: error
+
+# Java代码方式配置Feign打印日志
+#logging:
+#  level:
+#     com.wzliulan.demo.spca.content.feign.UserCenterFeign: debug
+
+# 配置文件方式配置Feign打印日志
+#feign:
+#  client:
+#    config:
+#      # 要调用服务的名称
+#      spca-user:
+#        loggerLevel: full
+
+# 全局配置Feign打印日志
+#logging:
+#  level:
+#    com.wzliulan.demo.spca.content: debug
+#feign:
+#  client:
+#    config:
+#      default:
+#        loggerLevel: full
+#  httpclient:
+#    enabled: true
+#    max-connections: 200
+#    max-connections-per-route: 50
+
+# 配置RocketMQ-生产者端
+#rocketmq:
+#  name-server: 192.168.1.126:9876
+#  producer:
+#    group: content-producer
+
+# jwt
+jwt:
+  secret: I1Ni2VyX25hbWUiOiJhZIsImlkIjoiMSIsImlhdCI
+  expire: 1209600
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+        requestInterceptors:
+          - com.wzliulan.demo.spca.content.feign.interceptor.TokenRelayRequestInterceptor

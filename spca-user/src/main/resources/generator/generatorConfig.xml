@@ -1,0 +1,39 @@
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="generator/config.properties"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <property name="caseSensitive" value="true"/>
+        </plugin>
+
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.user}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="com.wzliulan.demo.spca.user.domain.model"
+                            targetProject="src/main/java"/>
+
+        <sqlMapGenerator targetPackage="com.wzliulan.demo.spca.user.dao"
+                         targetProject="src/main/resources"/>
+
+        <javaClientGenerator targetPackage="com.wzliulan.demo.spca.user.dao"
+                             targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <table schema="${schema.name}" tableName="${table.name}" domainObjectName="${domain.object.name}">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
+        <!--<table schema="distributed_lock" tableName="t_lock" domainObjectName="TLock" ></table>-->
+
+    </context>
+</generatorConfiguration>
